@@ -1,1 +1,2 @@
-main.o: main.c
+main.o: main.c map.h
+map.h:

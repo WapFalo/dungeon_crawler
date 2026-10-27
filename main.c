@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include "map.h"
 
 typedef struct {
     int running;    // 1 if the game is running, 0 if not
@@ -14,11 +15,11 @@ void initScreen (void) {
     curs_set(0);
 }
 
-int handleInput(void) {
+int handleInput (void) {
     return getch();
 }
 
-void update(Game *game, int key) {
+void update (Game *game, int key) {
     if (key == 'q') game->running = 0;
     game->lastKey = key;
     game->turn++;
@@ -32,14 +33,30 @@ void render (const Game *game) {
     refresh();
 }
 
-int main(void){
-    Game game = { .running = 1 };
+static void renderMap (const Map *map) {
+    for (int y = 0; y < MAP_HEIGHT; y++){
+        for (int x = 0; x < MAP_WIDTH; x++){
+            mvaddch(y, x, mapGet(map, x, y));
+        }
+    }
+}
+
+int main (void){
+    Map map;
+    mapInit(&map);
+
     initScreen();
-    render(&game);
-    while (game.running) {
-        int key = handleInput();
-        update(&game, key);
-        render(&game);
+    cbreak();
+    noecho();
+    curs_set(0);
+
+    int key = 0;
+    while (key != 'q') {
+        erase();
+        renderMap(&map);
+        mvprintw(MAP_HEIGHT + 1, 0, "Press 'q' to quit");
+        refresh();
+        key = getch();
     }
     endwin();
 

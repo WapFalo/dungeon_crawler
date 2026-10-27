@@ -8,7 +8,7 @@ typedef struct {
     char cells[MAP_HEIGHT][MAP_WIDTH];
 } Map;
 
-void map_init(Map *map);
-char map_get(const Map *mqp, int x, int y);
+void mapInit(Map *map);
+char mapGet(const Map *map, int x, int y);
 
 #endif
